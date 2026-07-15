@@ -24,3 +24,10 @@ geoalchemy2==0.14.2
 shapely==2.0.4
 faker==24.2.0
 psycopg2-binary==2.9.9
+celery==5.3.6
+stripe==7.8.0
+elasticsearch==8.11.1
+twilio==9.0.3
+sentry-sdk==1.44.1
+opentelemetry-api==1.22.0
+opentelemetry-sdk==1.22.0

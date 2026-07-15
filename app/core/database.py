@@ -37,7 +37,7 @@ def get_db() -> Generator[Session, None, None]:
         db.close()
 
 def init_db():
-    # Import all models to register them with Base
+    # Import all models to register them with Base – 18 modules for full production
     from app.modules.auth.models import User  # noqa: F401
     from app.modules.users.models import Profile, UserPreference  # noqa: F401
     from app.modules.media.models import MediaAsset  # noqa: F401
@@ -47,4 +47,6 @@ def init_db():
     from app.modules.subscriptions.models import Subscription  # noqa: F401
     from app.modules.moderation.models import Report, Block  # noqa: F401
     from app.modules.analytics.models import AnalyticsEvent, DailyMetrics  # noqa: F401
+    from app.modules.payments.models import Payment, Invoice  # noqa: F401
+    from app.modules.verification.models import VerificationRequest  # noqa: F401
     Base.metadata.create_all(bind=engine)

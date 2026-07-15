@@ -106,7 +106,7 @@ app.add_exception_handler(RequestValidationError, validation_exception_handler)
 app.add_exception_handler(StarletteHTTPException, http_exception_handler)
 app.add_exception_handler(Exception, generic_exception_handler)
 
-# Routers
+# Routers – 18 modules for full Tinder production
 from app.modules.auth.router import router as auth_router
 from app.modules.users.router import router as users_router
 from app.modules.media.router import router as media_router
@@ -119,6 +119,14 @@ from app.modules.subscriptions.router import router as subs_router
 from app.modules.moderation.router import router as mod_router
 from app.modules.analytics.router import router as analytics_router
 from app.modules.admin.router import router as admin_router
+from app.modules.email.router import router as email_router
+from app.modules.sms.router import router as sms_router
+from app.modules.payments.router import router as payments_router
+from app.modules.verification.router import router as verification_router
+from app.modules.explore.router import router as explore_router
+from app.modules.search.router import router as search_router
+from app.modules.features.router import router as features_router
+from app.modules.boosts.router import router as boosts_router
 
 v1_prefix = settings.API_V1_PREFIX
 
@@ -134,6 +142,14 @@ app.include_router(subs_router, prefix=v1_prefix)
 app.include_router(mod_router, prefix=v1_prefix)
 app.include_router(analytics_router, prefix=v1_prefix)
 app.include_router(admin_router, prefix=v1_prefix)
+app.include_router(email_router, prefix=v1_prefix)
+app.include_router(sms_router, prefix=v1_prefix)
+app.include_router(payments_router, prefix=v1_prefix)
+app.include_router(verification_router, prefix=v1_prefix)
+app.include_router(explore_router, prefix=v1_prefix)
+app.include_router(search_router, prefix=v1_prefix)
+app.include_router(features_router, prefix=v1_prefix)
+app.include_router(boosts_router, prefix=v1_prefix)
 
 # Health - detailed for k8s liveness/readiness
 @app.get("/health", tags=["health"])
