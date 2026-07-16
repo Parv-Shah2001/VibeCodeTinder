@@ -1,0 +1,84 @@
+# Helm values for production 50M scale
+replicaCount: 3
+
+image:
+  repository: vibecodetinder/api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: alb
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/stickiness.enabled: "true"
+    alb.ingress.kubernetes.io/stickiness.lb_cookie.duration_seconds: "86400"
+  hosts:
+    - host: api.vibecodetinder.com
+      paths: [{ path: /, pathType: Prefix }]
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+  customMetrics:
+    - type: Pods
+      pods:
+        metric:
+          name: vibe_ws_active_connections
+        target:
+          averageValue: "5000"
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+
+env:
+  ENV: production
+  S3_BUCKET_MEDIA: vibe-media-prod
+  S3_BUCKET_MESSAGE_MEDIA: vibe-message-media-prod
+  MAX_PHOTOS_PER_USER: "9"
+  RECOMMENDATION_CACHE_TTL_SECONDS: "300"
+
+secrets:
+  # Use external-secrets operator in prod
+  databaseUrl: "postgresql+psycopg2://vibe:xxx@rds:5432/vibecodetinder"
+  redisUrl: "redis://elasticache:6379/0"
+  secretKey: "CHANGE_ME_32_CHARS"
+
+monitoring:
+  enabled: true
+  prometheus:
+    scrape: true
+    port: 8000
+    path: /metrics
+
+celery:
+  enabled: true
+  broker: "redis://elasticache:6379/0"
+  workers: 4 # for 10M media/day processing
+
+postgres:
+  enabled: false # Use RDS in prod, but chart can provision
+
+redis:
+  enabled: false # Use ElastiCache in prod
+
+frontend:
+  enabled: true
+  replicaCount: 2
+  image:
+    repository: vibecodetinder/frontend
+    tag: latest

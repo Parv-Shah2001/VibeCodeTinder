@@ -1,0 +1,14 @@
+{
+  "title": "VibeCodeTinder Production",
+  "panels": [
+    {"title": "DAU", "targets": [{"expr": "sum(vibe_online_users)"}]},
+    {"title": "Swipes per second", "targets": [{"expr": "rate(vibe_swipes_total[1m])"}]},
+    {"title": "Matches per second", "targets": [{"expr": "rate(vibe_matches_total[1m])"}]},
+    {"title": "Messages per second", "targets": [{"expr": "rate(vibe_messages_total[1m])"}]},
+    {"title": "Media Uploads", "targets": [{"expr": "rate(vibe_media_uploads_total[1m])"}]},
+    {"title": "Request Duration p95", "targets": [{"expr": "histogram_quantile(0.95, rate(vibe_request_duration_seconds_bucket[5m]))"}]},
+    {"title": "Recommendation Duration", "targets": [{"expr": "histogram_quantile(0.95, rate(vibe_recommendation_duration_seconds_bucket[5m]))"}]},
+    {"title": "WS Connections", "targets": [{"expr": "vibe_ws_active_connections"}]},
+    {"title": "Discovery Cache Hit Rate", "targets": [{"expr": "rate(vibe_discovery_cache_total{result='hit'}[5m]) / rate(vibe_discovery_cache_total[5m])"}]}
+  ]
+}
